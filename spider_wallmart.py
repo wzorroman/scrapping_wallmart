@@ -184,15 +184,6 @@ def process():
     print(f"\n" + "="*20)
     print("Proceso de extracción de datos finalizado.")
 
-def process_individual(search_term):    
-    browser_config = get_basic_random_browser_config()
-    products = extract_product_data(search_term, browser_config)
-    export_data(products, search_term)
-    
-    print(f"\n" + "="*20)
-    print("Proceso de extracción de datos finalizado.")
-
 
 if __name__ == "__main__":
-    term = "cama"
-    process_individual(term)
+    process()

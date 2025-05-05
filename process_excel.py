@@ -18,7 +18,7 @@ def read_excel_to_list(file_path) -> list:
     #  'Estado': 'VIGENTE'
     
     data = pd.read_excel(file_path)
-    data_list = data.to_dict(orient='records')    
+    data_list = data.to_dict(orient='records')
     return data_list
 
 def normalize_search_term(search_term: str) -> str:
@@ -27,14 +27,14 @@ def normalize_search_term(search_term: str) -> str:
     normalized_term = '-'.join(filtered_terms).lower()    
     return normalized_term
 
-def export_data(products_data: List, search_term: str)-> tuple:
+def export_data(products_data: List, search_term: str, page_origin: str)-> tuple:
     # Crear directorio de exportación si no existe
     export_dir = Path('exports')
     export_dir.mkdir(exist_ok=True)
     
     nterm = normalize_search_term(search_term)    
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename_base = f"{timestamp}_walmart_search_{nterm}"
+    filename_base = f"{timestamp}_{page_origin}_search_{nterm}"
     
     # Exportar a CSV
     df = pd.DataFrame(products_data)
@@ -51,19 +51,4 @@ def export_data(products_data: List, search_term: str)-> tuple:
     print(f"- JSON: {json_path}")
     
     return csv_path, json_path
-
-
-# if __name__ == "__main__":
-#     file_path = "model_file_products.xlsx"
-#     data_list = read_excel_to_list(file_path)
-#     # print(data_list)
-    
-#     for item in data_list:
-#         print("\n" + "=" * 40)
-#         print(f"Producto| SKU:{item['SkuProducto']} - ({item['Estado']})")
-#         print(f"Línea: {item['Linea']}, Categoria: {item['Categoria']}")
-#         print(f"{item['Producto']}")
-#         print("-" * 40)
-    
-      
     

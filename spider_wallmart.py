@@ -174,7 +174,7 @@ def process():
         print(f"Extrayendo datos para: '{search_term}'...")
         browser_config = get_basic_random_browser_config()
         products = extract_product_data(search_term, browser_config)        
-        export_data(products, search_term)
+        export_data(products, search_term, page_origin="walmart")
         
         # Esperar un tiempo aleatorio entre búsquedas
         time_between_searches = random.uniform(3, 7)

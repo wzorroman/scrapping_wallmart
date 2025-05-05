@@ -18,10 +18,11 @@
 
 ## 2. Correr el script
     $ python spider_wallmart.py
+    $ python spider_mercado_libre.py
 
 ## Recomendaciones Adicionales:
     Manejo de proxies: Considera agregar rotación de proxies para evitar bloqueos
-    
+
 ## Extras
     ```
     Docs:  https://playwright.dev/python/docs/intro#installing-playwright

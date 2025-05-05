@@ -14,41 +14,41 @@ def get_basic_random_browser_config():
     ]
     return random.choice(browsers)
 
-def handle_human_challenge(page):
-    challenge_text = "Human Challenge requiere verificación"
-    seconds_press = 15
+def wallmart_handle_human_challenge(page, max_attempts=3):
+    press_time = random.uniform(10, 15)
+    
     if "blocked?url=" not in page.url.lower():
         print("No se detectó bloqueo")
         return True
     
-    try:
-        # page.wait_for_selector(f"text='{challenge_text}'", timeout=5000)        
+    for attempt in range(max_attempts):
+        
         page.wait_for_selector("button:has-text('Mantén presionado')", timeout=10000)
         print("Detectado Human Challenge, procediendo con la verificación...")
         
-        # Localizar el botón que debe mantenerse presionado
-        # button = page.query_selector('div[role="button"][aria-label="Pulsar y mantener pulsado Desafío humano"]')        
         button = page.locator("button:has-text('Mantén presionado')")
         if not button:
             print("No se pudo encontrar el botón del challenge")
             return False    
         
-        print("Botón encontrado, manteniendo presionado...")        
-        button.click(delay=10000)
-        
-        breakpoint()
-        # Esperar a que desaparezca el challenge
         try:
-            page.wait_for_selector(f"text='{challenge_text}'", state="hidden", timeout=5000)
-            print("Verificación completada con éxito")
-            return True
-        except:
-            print("El challenge podría no haber desaparecido")
-            return False            
+            print(f"Intento {attempt + 1}: Manteniendo presionado por {press_time:.1f}s")
+            button.click(delay=press_time*1000)
             
-    except:
-        print("No se detectó Human Challenge, continuando...")
-        return True
+            # Esperar a que desaparezca el challenge
+            try:
+                button.wait_for(state="hidden", timeout=5000)
+                page.wait_for_load_state("networkidle", timeout=10000)
+                return True
+            except:
+                if attempt == max_attempts - 1:
+                    print("Máximo de intentos alcanzado")
+                    return False
+                continue    
+                
+        except:
+            print("No se detectó Human Challenge, continuando...")
+            return False
     
 
 def extract_product_data(search_term, browser_config):
@@ -70,8 +70,7 @@ def extract_product_data(search_term, browser_config):
         wait_time_load = random.uniform(5, 10)
         time.sleep(wait_time_load)
         
-        handle_human_challenge(page)
-        breakpoint()
+        wallmart_handle_human_challenge(page)
         
         name_img = normalize_search_term(search_term)
         current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -165,7 +164,7 @@ def extract_product_data(search_term, browser_config):
         return products_data
 
 
-if __name__ == "__main__":        
+def process():
     file_path = "model_file_products.xlsx"
     data_list = read_excel_to_list(file_path)
 
@@ -184,3 +183,16 @@ if __name__ == "__main__":
     
     print(f"\n" + "="*20)
     print("Proceso de extracción de datos finalizado.")
+
+def process_individual(search_term):    
+    browser_config = get_basic_random_browser_config()
+    products = extract_product_data(search_term, browser_config)
+    export_data(products, search_term)
+    
+    print(f"\n" + "="*20)
+    print("Proceso de extracción de datos finalizado.")
+
+
+if __name__ == "__main__":
+    term = "cama"
+    process_individual(term)

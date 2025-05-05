@@ -5,7 +5,7 @@
   ### Ambiente:
   - Ubuntu 20.04
   - python 3.11
-  - playwright 1.48.0  
+  - playwright 1.48.0
 
 ## 1. Tener instalado entorno virtual
 
@@ -19,6 +19,9 @@
 ## 2. Correr el script
     $ python spider_wallmart.py
 
+## Recomendaciones Adicionales:
+    Manejo de proxies: Considera agregar rotación de proxies para evitar bloqueos
+    
 ## Extras
     ```
     Docs:  https://playwright.dev/python/docs/intro#installing-playwright
